@@ -1,0 +1,23 @@
+FROM python:3.7-alpine
+
+RUN apk update && \
+    apk add python3 python3-dev build-base \
+    gcc musl-dev linux-headers zlib zlib-dev \
+    freetype freetype-dev jpeg jpeg-dev libffi-dev \
+    postgresql-dev \
+    openjdk8-jre
+
+WORKDIR /code
+COPY . /code/
+
+ENV LANG c.UTF-8
+ENV DJANGO_SETTINGS_MODULE project.settings.dev
+ENV PYTHONUNBUFFERED 1
+
+RUN pip3 install pipenv
+
+RUN pipenv install --system --deploy --ignore-pipfile
+
+#EXPOSE 8000
+
+#CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000]
